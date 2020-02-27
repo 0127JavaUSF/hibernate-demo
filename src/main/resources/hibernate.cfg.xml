@@ -1,0 +1,34 @@
+<!DOCTYPE hibernate-configuration SYSTEM "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<!-- SessionFactory is the central class/object that represents Hibernate 
+			The SessionFactory is generally long lived and gives access to Session objects 
+			which provide us access to our database -->
+		<property name="hibernate.connection.driver_class">
+			org.postgresql.Driver
+		</property>
+		<property name="hibernate.connection.url">
+			jdbc:postgresql://localhost:5432/postgres
+		</property>
+		<!-- Will define these programmatically pulling from environment variables 
+			<property name="hibernate.connection.username"></property> <property name="hibernate.connection.password"></property> -->
+		<!-- Shows generated SQL statements in standard out -->
+		<property name="show_sql">true</property>
+
+		<!-- Connection Pooling is the process of maintaining open connections 
+			to the database and reusing. This is beneficial because creating a new connection 
+			is a complicated and time consuming process. Using a connection pool can 
+			speed up database interactions significantly. -->
+		<property name="hibernate.connection.pool_size">1</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+		<!-- Defines what database DDL operations Hibernate will use when it learns 
+			about our entities -->
+		<!-- https://docs.jboss.org/hibernate/orm/5.2/userguide/html_single/Hibernate_User_Guide.html#configurations-hbmddl -->
+		<property name="hibernate.hbm2ddl.auto">update</property>
+	</session-factory>
+</hibernate-configuration>
+
+
+
+
