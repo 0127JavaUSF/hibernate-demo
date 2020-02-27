@@ -1,10 +1,14 @@
 package com.revature.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Check;
@@ -39,6 +43,10 @@ public class Bear {
 	@Column(unique=true)
 	private String name;
 
+	@OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@JoinColumn(name="honey_jar_id")
+	private HoneyJar honeyJar;
+	
 	public int getId() {
 		return id;
 	}
@@ -93,6 +101,14 @@ public class Bear {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public HoneyJar getHoneyJar() {
+		return honeyJar;
+	}
+
+	public void setHoneyJar(HoneyJar honeyJar) {
+		this.honeyJar = honeyJar;
 	}
 
 	@Override

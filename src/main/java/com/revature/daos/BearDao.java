@@ -108,8 +108,8 @@ public class BearDao {
 		try(Session sess = HibernateUtil.openSession()) {
 			logger.warn("Loading bear");
 			Bear bear = sess.load(Bear.class, id);
+			Hibernate.initialize(bear.getHoneyJar());
 			logger.warn("Bear loaded");
-			Hibernate.initialize(bear);
 			// This will load the proxy, but prefer Hibernate.initialize()
 			// bear.getBreed(); 
 			return bear;

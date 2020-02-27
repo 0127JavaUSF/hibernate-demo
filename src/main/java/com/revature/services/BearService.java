@@ -15,8 +15,6 @@ public class BearService {
 		// internal business logic
 		logger.warn("Received bear with fur color: " + bear.getColor());
 		return bearDao.createBear(bear);
-		
-		
 	}
 
 

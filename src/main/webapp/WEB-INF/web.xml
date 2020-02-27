@@ -11,8 +11,18 @@
   	<servlet-class>com.revature.servlets.BearServlet</servlet-class>
   	<load-on-startup>0</load-on-startup>
   </servlet>
+  <servlet>
+  	<servlet-name>HoneyJarServlet</servlet-name>
+  	<display-name>HoneyJarServlet</display-name>
+  	<description></description>
+  	<servlet-class>com.revature.servlets.HoneyJarServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>BearServlet</servlet-name>
   	<url-pattern>/bears/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>HoneyJarServlet</servlet-name>
+  	<url-pattern>/honey-jars/*</url-pattern>
   </servlet-mapping>
 </web-app>
