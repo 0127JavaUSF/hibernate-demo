@@ -16,7 +16,7 @@ import org.hibernate.annotations.Check;
 @Entity // Must be used if we want Hibernate to manage it
 // @Table - Optional annotation that provides additional table configuration
 @Table(name="bears")
-@Check(constraints = "id < 1")
+@Check(constraints = "id > 0")
 public class Bear {
 	// BY DEFAULT all properties will be treated as columns
 	@Id

@@ -10,12 +10,19 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.models.Bear;
 import com.revature.services.BearService;
+import com.revature.util.HibernateUtil;
 
 public class BearServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	BearService bearService = new BearService();
 	
+	@Override
+	public void init() {
+		HibernateUtil.configureHibernate();
+	}
+	
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
 		ObjectMapper om = new ObjectMapper();
@@ -26,4 +33,8 @@ public class BearServlet extends HttpServlet {
 		om.writeValue(response.getWriter(), bear);
 	}
 	
+	@Override
+	public void destroy() {
+		HibernateUtil.shutdownFactory();
+	}
 }
