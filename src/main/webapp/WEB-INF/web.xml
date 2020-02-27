@@ -13,6 +13,6 @@
   </servlet>
   <servlet-mapping>
   	<servlet-name>BearServlet</servlet-name>
-  	<url-pattern>/bears</url-pattern>
+  	<url-pattern>/bears/*</url-pattern>
   </servlet-mapping>
 </web-app>

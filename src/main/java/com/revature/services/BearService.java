@@ -18,4 +18,16 @@ public class BearService {
 		
 		
 	}
+
+
+	public Bear getBearById(int id) {
+		// internal business logic
+//		return bearDao.getBearById(id);
+		return bearDao.loadBearById(id);
+	}
+
+
+	public Bear updateBear(Bear bear) {
+		return bearDao.mergeBear(bear);
+	}
 }
