@@ -35,15 +35,18 @@ public class BearServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 		throws ServletException, IOException {
 		
+		
+		// bears
 		if(request.getPathInfo() == null) {
-			response.setStatus(404);
+			handleGetAllBears(request, response);
 			return;
 		}
 		
 		String[] parts = request.getPathInfo().split("/");
 		
+		// bears/
 		if (parts.length < 2) {
-			response.setStatus(404);
+			handleGetAllBears(request, response);
 			return;
 		}
 		
@@ -66,7 +69,6 @@ public class BearServlet extends HttpServlet {
 				handleBearGetSiblingsById(id, response); break;
 			case "cave":
 				handleBearGetCaveByBearId(id, response); break;
-
 		}
 		
 		if (parts[2].equals("siblings")) {
@@ -74,6 +76,28 @@ public class BearServlet extends HttpServlet {
 		}
 	}
 	
+	private void handleGetAllBears(HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		List<Bear> bears = null;
+		String name = request.getParameter("name");
+		String color = request.getParameter("color");
+		String murder = request.getParameter("murder");
+		
+		if(name != null) {
+			bears = bearService.getBearsByName(name);
+		} else if(color != null) {
+			bears = bearService.getBearsByColor(color);
+		} else if(murder.toLowerCase().equals("true")) {
+			bears = bearService.getMurderBears();
+		} else {
+			bears = bearService.getAllBears();			
+		}
+		
+		
+		response.setContentType("application/json");
+		om.writeValue(response.getWriter(), bears);
+	}
+
 	private void handleBearGetCaveByBearId(int id, HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
 		Cave cave = bearService.getCaveByBearId(id);
 		response.setContentType("application/json");

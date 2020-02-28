@@ -41,4 +41,24 @@ public class BearService {
 	public Cave getCaveByBearId(int id) {
 		return bearDao.getCaveByBearId(id);
 	}
+
+
+	public List<Bear> getAllBears() {
+		return bearDao.getAllBears();
+	}
+
+
+	public List<Bear> getBearsByColor(String color) {
+		return bearDao.getBearsWithFurColor(color);
+	}
+
+
+	public List<Bear> getMurderBears() {
+		return bearDao.getMurderBears();
+	}
+
+
+	public List<Bear> getBearsByName(String name) {
+		return bearDao.getBearsByName(name);
+	}
 }

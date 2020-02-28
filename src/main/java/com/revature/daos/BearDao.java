@@ -5,6 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -193,4 +198,69 @@ public class BearDao {
 			return cave;
 		}
 	}
+
+	public List<Bear> getAllBears() {
+		try(Session session = HibernateUtil.openSession()) {
+			Query query = session.createQuery("from Bear");
+			List<Bear> bears = query.getResultList();
+			return bears;
+		}
+	}
+	
+	public List<Bear> getBearsWithFurColor(String color) {
+		try(Session session = HibernateUtil.openSession()) {
+			Query query = session.createQuery("from Bear where color = :color");
+			query.setParameter("color", color);
+			List<Bear> bears = query.getResultList();
+			return bears;
+		}
+	}
+	
+	/*
+	 * Criteria - Fully object oriented querying style. Support full SQL functionality
+	 * with full object oriented type checking. 
+	 * @return
+	 */
+	public List<Bear> getMurderBears() {
+		try(Session session = HibernateUtil.openSession()) {
+			CriteriaBuilder cb = session.getCriteriaBuilder();
+			CriteriaQuery<Bear> bearQuery = cb.createQuery(Bear.class);
+			Root<Bear> root = bearQuery.from(Bear.class);
+			
+			bearQuery.select(root)
+				.where(cb.ge(root.get("peopleEaten"), 1));
+			
+			Query query = session.createQuery(bearQuery);
+			List<Bear> result = query.getResultList();
+			return result;
+		}
+	}
+
+	/**
+	 * Originally, if you used any native query it would immediately invalidate
+	 * your Hibernate Cache.  With caching we're trading server memory 
+	 * for faster IO performance and less database interaction. Native queries
+	 * will invalidate that cache, causing our IO performance to slow.
+	 */
+	public List<Bear> getBearsByName(String name) {
+		try(Session session = HibernateUtil.openSession()) {
+			return session.createNativeQuery(
+						"SELECT * FROM bears WHERE name LIKE :name")
+						.setParameter("name", name)
+						.addEntity(Bear.class)
+						.getResultList();
+		}
+	}
+	
+	public List<Bear> getBearsByBreed(String breed) {
+		try(Session session = HibernateUtil.openSession()) {
+			return session.createNamedQuery("getBearsByBreed")
+				.setParameter("breed", breed)
+				.getResultList();
+		}
+	}
 }
+
+
+
+

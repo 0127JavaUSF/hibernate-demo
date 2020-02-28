@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -32,6 +33,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Check(constraints = "id > 0")
 @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 @JsonIgnoreProperties("@id")
+@NamedQuery(name = "getBearByBreed", query = "FROM Bear WHERE breed = :breed")
 public class Bear {
 	// BY DEFAULT all properties will be treated as columns
 	@Id
