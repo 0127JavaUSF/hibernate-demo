@@ -7,6 +7,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import com.revature.models.Bear;
+import com.revature.models.Cave;
 import com.revature.models.HoneyJar;
 
 public class HibernateUtil {
@@ -29,7 +30,8 @@ public class HibernateUtil {
 				.setProperty("hibernate.connection.password", 
 						System.getenv("EM_PASS"))
 				.addAnnotatedClass(Bear.class)
-				.addAnnotatedClass(HoneyJar.class);
+				.addAnnotatedClass(HoneyJar.class)
+				.addAnnotatedClass(Cave.class);
 		
 		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
 				.applySettings(configuration.getProperties()).build();

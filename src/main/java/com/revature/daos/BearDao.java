@@ -1,11 +1,17 @@
 package com.revature.daos;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.revature.models.Bear;
+import com.revature.models.Cave;
 import com.revature.util.HibernateUtil;
 
 /**
@@ -34,6 +40,16 @@ import com.revature.util.HibernateUtil;
  * 6. MERGE
  * 7. SAVEORUPDATE
  * 8. DELETE
+ * 
+ * 
+ * Hibernate interfaces:
+ * 
+ * 1. SessionFactory
+ * 2. Transaction
+ * 3. Session
+ * 4. (Configuration)
+ * 5. Query
+ * 6. Criteria
  */
 
 public class BearDao {
@@ -109,6 +125,8 @@ public class BearDao {
 			logger.warn("Loading bear");
 			Bear bear = sess.load(Bear.class, id);
 			Hibernate.initialize(bear.getHoneyJar());
+			Hibernate.initialize(bear.getCubs());
+			Hibernate.initialize(bear.getParents());
 			logger.warn("Bear loaded");
 			// This will load the proxy, but prefer Hibernate.initialize()
 			// bear.getBreed(); 
@@ -135,9 +153,10 @@ public class BearDao {
 	public Bear mergeBear(Bear bear) {
 		try (Session session = HibernateUtil.openSession()) {
 			Transaction tx = session.beginTransaction();
-			Bear loadedBear = session.get(Bear.class, bear.getId());
+//			Bear loadedBear = session.get(Bear.class, bear.getId());
+			System.out.println(bear);
 			bear = (Bear) session.merge(bear);
-			logger.warn(bear == loadedBear);
+//			logger.warn(bear == loadedBear);
 			tx.commit();
 			return bear;
 		}
@@ -152,4 +171,26 @@ public class BearDao {
 		}
 	}
 
+	public List<Bear> getSiblingsById(int id) {
+		try(Session session = HibernateUtil.openSession()) {
+			Bear bear = session.load(Bear.class, id);
+			List<Bear> parents = bear.getParents();
+			Set<Bear> siblings = new HashSet<>();
+			for(Bear parent : parents) {
+				siblings.addAll(parent.getCubs());
+			}
+			siblings.remove(bear);
+			List<Bear> siblingsList = new ArrayList<>();
+			siblingsList.addAll(siblings);
+			return siblingsList;
+		}
+	}
+
+	public Cave getCaveByBearId(int id) {
+		try(Session session = HibernateUtil.openSession()) {
+			Bear bear = session.get(Bear.class, id);
+			Cave cave = bear.getCave();
+			return cave;
+		}
+	}
 }

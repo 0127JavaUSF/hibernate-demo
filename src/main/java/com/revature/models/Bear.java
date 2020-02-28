@@ -1,5 +1,7 @@
 package com.revature.models;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,10 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Check;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /*
  * We will use JPA annotations to define this class as an entity
@@ -21,6 +30,8 @@ import org.hibernate.annotations.Check;
 // @Table - Optional annotation that provides additional table configuration
 @Table(name="bears")
 @Check(constraints = "id > 0")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+@JsonIgnoreProperties("@id")
 public class Bear {
 	// BY DEFAULT all properties will be treated as columns
 	@Id
@@ -38,15 +49,55 @@ public class Bear {
 	/** Height in meters when on two legs **/
 	@Column(columnDefinition = "float")
 	private double height;
+	
+//	@Transient -- @Transient properties are not stored in the database
 	private double weight;
 	
 	@Column(unique=true)
 	private String name;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="honey_jar_id")
 	private HoneyJar honeyJar;
 	
+	@ManyToOne
+	@JoinColumn(name="cave_id")
+	private Cave cave;
+	
+	@ManyToMany
+	@JoinTable(name="bear_cubs", joinColumns = { @JoinColumn(name="parent_id")},
+					inverseJoinColumns = { @JoinColumn(name="cub_id") })			
+	private List<Bear> cubs;
+	
+	@ManyToMany
+	@JoinTable(name="bear_cubs", joinColumns = { @JoinColumn(name="cub_id")},
+			inverseJoinColumns = { @JoinColumn(name="parent_id") })	
+	private List<Bear> parents;
+	
+	public List<Bear> getCubs() {
+		return cubs;
+	}
+
+	public void setCubs(List<Bear> cubs) {
+		this.cubs = cubs;
+	}
+
+	public List<Bear> getParents() {
+		return parents;
+	}
+
+	public void setParents(List<Bear> parents) {
+		this.parents = parents;
+	}
+
+	public Cave getCave() {
+		return cave;
+	}
+
+	public void setCave(Cave cave) {
+		this.cave = cave;
+	}
+
 	public int getId() {
 		return id;
 	}

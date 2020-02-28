@@ -1,15 +1,19 @@
 package com.revature.servlets;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.revature.models.Bear;
+import com.revature.models.Cave;
 import com.revature.services.BearService;
 import com.revature.util.HibernateUtil;
 
@@ -38,20 +42,54 @@ public class BearServlet extends HttpServlet {
 		
 		String[] parts = request.getPathInfo().split("/");
 		
-		if (parts.length < 1) {
+		if (parts.length < 2) {
 			response.setStatus(404);
 			return;
 		}
 		
-		String part = parts[1];
 		int id = 0;
 		try {
-			id = Integer.parseInt(part);
+			id = Integer.parseInt(parts[1]);
 		} catch(NumberFormatException e) {
 			response.setStatus(404);
 			return;
 		}
 		
+		if (parts.length == 2) {
+			// /bears/1
+			handleBearById(id, response);
+			return;
+		}
+		
+		switch(parts[2]) {
+			case "siblings": 
+				handleBearGetSiblingsById(id, response); break;
+			case "cave":
+				handleBearGetCaveByBearId(id, response); break;
+
+		}
+		
+		if (parts[2].equals("siblings")) {
+			handleBearGetSiblingsById(id, response);
+		}
+	}
+	
+	private void handleBearGetCaveByBearId(int id, HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		Cave cave = bearService.getCaveByBearId(id);
+		response.setContentType("application/json");
+		om.writeValue(response.getWriter(), cave);
+	}
+
+	private void handleBearGetSiblingsById(int id, HttpServletResponse response)
+		throws IOException {
+		List<Bear> siblings = bearService.getSiblingsById(id);
+		response.setContentType("application/json");
+		om.writeValue(response.getWriter(), siblings);
+	}
+
+	private void handleBearById(int id, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		Bear bear = bearService.getBearById(id);
 		
 		if (bear == null) {
@@ -77,6 +115,7 @@ public class BearServlet extends HttpServlet {
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Bear bear = om.readValue(req.getReader(), Bear.class);
+		System.out.println(bear);
 		bear = bearService.updateBear(bear);
 		resp.setContentType("application/json");
 		resp.setStatus(200);

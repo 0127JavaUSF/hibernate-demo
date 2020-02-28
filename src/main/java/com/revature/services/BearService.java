@@ -1,9 +1,12 @@
 package com.revature.services;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.revature.daos.BearDao;
 import com.revature.models.Bear;
+import com.revature.models.Cave;
 
 public class BearService {
 
@@ -27,5 +30,15 @@ public class BearService {
 
 	public Bear updateBear(Bear bear) {
 		return bearDao.mergeBear(bear);
+	}
+
+
+	public List<Bear> getSiblingsById(int id) {
+		return bearDao.getSiblingsById(id);
+	}
+
+
+	public Cave getCaveByBearId(int id) {
+		return bearDao.getCaveByBearId(id);
 	}
 }

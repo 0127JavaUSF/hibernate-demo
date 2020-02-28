@@ -17,6 +17,12 @@
   	<description></description>
   	<servlet-class>com.revature.servlets.HoneyJarServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>CaveServlet</servlet-name>
+  	<display-name>CaveServlet</display-name>
+  	<description></description>
+  	<servlet-class>com.revature.servlets.CaveServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>BearServlet</servlet-name>
   	<url-pattern>/bears/*</url-pattern>
@@ -24,5 +30,9 @@
   <servlet-mapping>
   	<servlet-name>HoneyJarServlet</servlet-name>
   	<url-pattern>/honey-jars/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>CaveServlet</servlet-name>
+  	<url-pattern>/caves/*</url-pattern>
   </servlet-mapping>
 </web-app>
